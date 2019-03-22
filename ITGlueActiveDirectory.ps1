@@ -124,17 +124,17 @@ if($attempted_match.data[0].attributes.name -eq $organisation) {
 #
 # Remove Existing
 #
-<#
+
 $existing = Get-ITGlueFlexibleAssets -filter_flexible_asset_type_id $assettypeID -filter_organization_id $ITGlueOrganisation
 if ($existing -ne $null){
 $existing.data | % {
 
-Write-Host Removing existing mapped drives from ITGlue
+Write-Host Removing existing Active Directory from ITGlue
 
 Remove-ITGlueFlexibleAssets -id $_.id -Confirm:$false}
 
 }
-#>
+
 
 $array = @()
 $adservers_array = @()
