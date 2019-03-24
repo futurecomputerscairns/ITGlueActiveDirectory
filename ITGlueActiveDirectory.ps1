@@ -184,6 +184,8 @@ if ($ADLevel -match "Windows2008Domain"){
     $ADLevel = "2012"}
     elseif ($ADLevel -match "Windows2012R2Domain"){
     $ADLevel = "2012R2"}
+    elseif ($ADLevel -match "Windows2016Domain"){
+    $ADLevel = "2016"}
     elseif ($ADLevel -match "Windows2003Domain"){
     $ADLevel = "2003"}
 $PDC = $Domain.PDCEmulator
