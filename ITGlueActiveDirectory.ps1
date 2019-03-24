@@ -178,8 +178,6 @@ if ($ADLevel -match "Windows2008Domain"){
     $ADLevel = "2008"}
     elseif ($ADLevel -match "Windows2008R2Domain"){
     $ADLevel = "2008R2"}
-    elseif ($ADLevel -match "Windows2010Domain"){
-    $ADLevel = "2010"}
     elseif ($ADLevel -match "Windows2012Domain"){
     $ADLevel = "2012"}
     elseif ($ADLevel -match "Windows2012R2Domain"){
