@@ -214,7 +214,7 @@ if ($RODC_array -eq $null){
 $RODC_array = @()
 }
 
-$domainadmins = ((Get-ADGroupMember -Identity "Domain Admins" -Recursive | Select name).name) -join ", "
+$domainadmins = ((Get-ADGroupMember -Identity "Domain Admins" -Recursive | Select name).name) -join "<br>" | Out-String
 $ou = Recurse-OU -dn (Get-ADDomain).DistinguishedName
 $ou = $ou -join "<br>" | Out-String
 
