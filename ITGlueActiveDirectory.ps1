@@ -139,7 +139,6 @@ Remove-ITGlueFlexibleAssets -id $_.id -Confirm:$false}
 
 }
 
-
 $array = @()
 $adservers_array = @()
 $dnsservers_array = @()
@@ -177,6 +176,8 @@ $DHCPServers_Array += $DHCP_ID
 $ADLevel = $domain.DomainMode
 if ($ADLevel -match "Windows2008Domain"){
     $ADLevel = "2008"}
+    elseif ($ADLevel -match "Windows2008R2Domain"){
+    $ADLevel = "2008R2"}
     elseif ($ADLevel -match "Windows2010Domain"){
     $ADLevel = "2010"}
     elseif ($ADLevel -match "Windows2012Domain"){
@@ -198,8 +199,6 @@ $GC_ID = (Get-ITGlueID -ServerName $gc2)
 $GCS_Array += $GC_ID
 }
 
-
-
 $RODCs = Get-ADDomainController -Filter * | Where-Object {$_.IsReadOnly -eq $true}
 
 foreach ($rodc in $rodcs){
@@ -214,10 +213,6 @@ $RODC_array = @()
 $domainadmins = ((Get-ADGroupMember -Identity "Domain Admins" -Recursive | Select name).name) -join ", "
 $ou = Recurse-OU -dn (Get-ADDomain).DistinguishedName
 $ou = $ou -join "<br>" | Out-String
-
-
-
- 
 
 $object = New-Object psobject
 $object | Add-Member -MemberType NoteProperty -Name ADFullName -Value $domainlong
