@@ -114,7 +114,7 @@ Write-Host Attempting match of ITGlue Company using name $organisation -Foregrou
 
 $attempted_match = Get-ITGlueOrganizations -filter_name "$organisation"
 
-if($attempted_match.data[0].attributes.name -eq $organisation) {
+if($attempted_match.data[0].attributes.name -match $organisation) {
             Write-Host "Auto-match of ITGlue company successful." -ForegroundColor Green
 
             $ITGlueOrganisation = $attempted_match.data.id
