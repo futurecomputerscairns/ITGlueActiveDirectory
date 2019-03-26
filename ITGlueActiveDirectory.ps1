@@ -51,11 +51,6 @@ Import-Module C:\temp\itglue\modules\itgluepowershell\ITGlueAPI.psd1 -Force
 Add-ITGlueAPIKey -Api_Key $key
 Add-ITGlueBaseURI -base_uri $ITGbaseURI
 
-function CreateITGItem ($resource, $body) {
-    $item = Invoke-RestMethod -Method POST -ContentType application/vnd.api+json -Uri $ITGbaseURI/$resource -Body $body -Headers $headers
-    #return $item
-}
-
 function BuildActiveDirectoryAsset ($tenantInfo) {
     
     $body = @{
@@ -85,6 +80,23 @@ function BuildActiveDirectoryAsset ($tenantInfo) {
     
     $tenantAsset = $body | ConvertTo-Json -Depth 10
     return $tenantAsset
+}
+
+function GetAllITGItems($Resource) {
+    $array = @()
+    
+    $body = Invoke-RestMethod -Method get -Uri "$ITGbaseURI/$Resource" -Headers $headers -ContentType application/vnd.api+json
+    $array += $body.data
+    Write-Host "Retrieved $($array.Count) items"
+        
+    if ($body.links.next) {
+        do {
+            $body = Invoke-RestMethod -Method get -Uri $body.links.next -Headers $headers -ContentType application/vnd.api+json
+            $array += $body.data
+            Write-Host "Retrieved $($array.Count) items"
+        } while ($body.links.next)
+    }
+    return $array
 }
 
 function CreateITGItem ($resource, $body) {
