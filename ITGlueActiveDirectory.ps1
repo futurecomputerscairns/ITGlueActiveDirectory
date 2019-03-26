@@ -82,7 +82,7 @@ function BuildActiveDirectoryAsset ($tenantInfo) {
     return $tenantAsset
 }
 
-function GetAllITGItems($Resource) {
+function GetAllITGItems ($Resource) {
     $array = @()
     
     $body = Invoke-RestMethod -Method get -Uri "$ITGbaseURI/$Resource" -Headers $headers -ContentType application/vnd.api+json
