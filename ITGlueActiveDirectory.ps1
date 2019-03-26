@@ -56,7 +56,7 @@ function CreateITGItem ($resource, $body) {
     #return $item
 }
 
-function Build365TenantAsset ($tenantInfo) {
+function BuildActiveDirectoryAsset ($tenantInfo) {
     
     $body = @{
         data = @{
@@ -92,6 +92,11 @@ function CreateITGItem ($resource, $body) {
     #return $item
 }
 
+function UpdateITGItem ($resource, $existingItem, $newBody) {
+    $updatedItem = Invoke-RestMethod -Method Patch -Uri "$ITGbaseUri/$Resource/$($existingItem.id)" -Headers $headers -ContentType application/vnd.api+json -Body $newBody
+    return $updatedItem
+}
+
 function Recurse-OU ([string]$dn, $level = 1)
 {
     if ($level -eq 1) { $dn }
@@ -124,20 +129,6 @@ if($attempted_match.data[0].attributes.name -match $organisation) {
             Exit
             }
 
-
-#
-# Remove Existing
-#
-
-$existing = Get-ITGlueFlexibleAssets -filter_flexible_asset_type_id $assettypeID -filter_organization_id $ITGlueOrganisation
-if ($existing -ne $null){
-$existing.data | % {
-
-Write-Host Removing existing Active Directory from ITGlue
-
-Remove-ITGlueFlexibleAssets -id $_.id -Confirm:$false}
-
-}
 
 $array = @()
 $adservers_array = @()
@@ -230,5 +221,22 @@ $object | Add-Member -MemberType NoteProperty -Name DomainAdmins -Value $domaina
 $object | Add-Member -MemberType NoteProperty -Name OU -Value $ou
 $array += $object
 
-$body = Build365TenantAsset -tenantInfo $array
-CreateITGItem -resource flexible_assets -body $body
+$existingAssets = @()
+$existingAssets += GetAllITGItems -Resource "flexible_assets?filter[organization_id]=$ITGlueOrganisation&filter[flexible_asset_type_id]=$assetTypeID"
+$matchingAsset = $existingAssets | Where-Object {$_.attributes.traits.'ad-full-name' -contains $array.ADFullName}
+
+if ($matchingAsset) {
+        Write-Output "Updating Active Directory Flexible Asset"
+        $UpdatedBody = BuildActiveDirectoryAsset -tenantInfo $array
+        $updatedItem = UpdateITGItem -resource flexible_assets -existingItem $matchingAsset -newBody $UpdatedBody
+        Start-Sleep -Seconds 3
+    }
+    else {
+        Write-Output "Creating Active Directory Flexible Asset"
+        $body = BuildActiveDirectoryAsset -tenantInfo $array
+        CreateITGItem -resource flexible_assets -body $body
+        Start-Sleep -Seconds 3
+        
+    }
+
+
