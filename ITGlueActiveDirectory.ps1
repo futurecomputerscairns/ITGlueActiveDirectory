@@ -168,12 +168,15 @@ $DNS_ID = (Get-ITGlueID -ServerName $dnsserver2)
 $DNSServers_Array += $DNS_ID
 }
 
+$DHCPexists = Get-Module DHCPServer
+if ($null -ne $DHCPexists){
 $DHCPServers = (Get-DHCPServerinDC).DNSName
 
 foreach ($dhcpserver in $dhcpservers){
 $dhcpserver2 = ($dhcpserver).Replace(("." + "$domainlong"),"")
 $DHCP_ID = (Get-ITGlueID -ServerName $dhcpserver2)
 $DHCPServers_Array += $DHCP_ID
+}
 }
 
 $ADLevel = $domain.DomainMode
