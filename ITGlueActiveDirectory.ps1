@@ -127,14 +127,29 @@ function Get-ITGlueID($ServerName){
 
 }
 
+function AttemptMatch($attemptedorganisation) {
+    $attempted_match = Get-ITGlueOrganizations -filter_name $attemptedorganisation
+    if($attempted_match.data[0].attributes.name -eq $attemptedorganisation) {
+                    
+                $ITGlueOrganisation = $attempted_match.data.id
+    }
+                else {
+                Write-Output "No auto-match was found. Please pass the exact name in ITGlue to -organization <string>" 
+                Exit
+                }
+            return $ITGlueOrganisation
+    
+               
+          }
+
 Write-Host Attempting match of ITGlue Company using name $organisation -ForegroundColor Green
 
-$attempted_match = Get-ITGlueOrganizations -filter_name "$organisation"
+$attempted_match = AttemptMatch -attemptedorganisation $organisation
 
-if($attempted_match.data[0].attributes.name -match $organisation) {
+if($attempted_match) {
             Write-Host "Auto-match of ITGlue company successful." -ForegroundColor Green
 
-            $ITGlueOrganisation = $attempted_match.data.id
+            $ITGlueOrganisation = $attempted_match
 }
             else {
             Write-Host "No auto-match was found. Please pass the exact name in ITGlue to -organization <string>" -ForegroundColor Red
