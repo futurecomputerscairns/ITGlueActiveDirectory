@@ -128,10 +128,10 @@ function Get-ITGlueID($ServerName){
 }
 
 function AttemptMatch($attemptedorganisation) {
-    $attempted_match = Get-ITGlueOrganizations -filter_name $attemptedorganisation
-    if($attempted_match.data[0].attributes.name -eq $attemptedorganisation) {
+    $attempted_match = (GetAllITGItems -Resource organizations) | Where-Object {$_.attributes.name -eq $attemptedorganisation}
+    if($attempted_match.attributes.name -eq $attemptedorganisation) {
                     
-                $ITGlueOrganisation = $attempted_match.data.id
+                $ITGlueOrganisation = $attempted_match.id
     }
                 else {
                 Write-Output "No auto-match was found. Please pass the exact name in ITGlue to -organization <string>" 
