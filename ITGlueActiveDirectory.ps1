@@ -242,6 +242,7 @@ $object | Add-Member -MemberType NoteProperty -Name ADFullName -Value $domainlon
 $object | Add-Member -MemberType NoteProperty -Name ADShortName -Value $domainshort
 $object | Add-Member -MemberType NoteProperty -Name ADServers -Value $adservers_array
 $object | Add-Member -MemberType NoteProperty -Name DNSServers -Value $dnsservers_array
+$object | Add-Member -MemberType NoteProperty -Name DNSServers -Value $dnsservers_array | Select -Unique
 $object | Add-Member -MemberType NoteProperty -Name DHCPServers -Value $dhcpservers_array
 $object | Add-Member -MemberType NoteProperty -Name ADLevel -Value $adlevel
 $object | Add-Member -MemberType NoteProperty -Name PDC -Value $pdc
