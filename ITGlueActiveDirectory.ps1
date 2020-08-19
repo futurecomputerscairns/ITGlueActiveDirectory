@@ -182,6 +182,7 @@ $dnsserver2 = ($dnsserver).Replace(("." + "$domainlong"),"")
 $DNS_ID = (Get-ITGlueID -ServerName $dnsserver2)
 $DNSServers_Array += $DNS_ID
 }
+$DNSServers_Array = $DNSServers_Array | Select -First 1
 
 $DHCPexists = Get-Module DHCPServer
 if ($null -ne $DHCPexists){
